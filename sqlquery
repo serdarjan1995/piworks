@@ -1,0 +1,9 @@
+---create table exhibit_table(PLAY_ID varchar, SONG_ID varchar,CLIENT_ID int,PLAY_TS timestamp);
+---COPY exhibit_table(PLAY_ID,SONG_ID,CLIENT_ID,PLAY_TS) 
+---FROM 'C:\Users\Sardor\Documents\Visual Studio 2013\Projects\
+---ConsoleApplication1\ConsoleApplication1\bin\Debug\Data\exhibitA-input.csv'
+---DELIMITER E'\t' CSV HEADER;
+--select * from exhibit_table where play_ts>='2016-10-08 00:00:00' and play_ts<'2016-11-08 00:00:00' order by play_ts
+select distinct on (distinct_play_count) distinct_play_count, count(*) over(partition by distinct_play_count) as client_count
+from (select count(distinct song_id) as distinct_play_count, client_id as client_count from exhibit_table
+	where play_ts>='2016-10-08 00:00:00' and play_ts<'2016-11-08 00:00:00' group by client_id) as temptable
